@@ -1,6 +1,7 @@
 # jndi-injector-clj
 
-jndi injection written in clojure, inspired by [welk1n's work](https://github.com/welk1n/JNDI-Injection-Exploit/tree/master)
+jndi injection written in clojure, inspired by [welk1n's work](https://github.com/welk1n/JNDI-Injection-Exploit/tree/master).
+
 Work in progress.
 
 ## Build
@@ -26,14 +27,6 @@ FIXME: listing of options this app accepts.
 ## Examples
 
 ...
-
-### Bugs
-
-...
-
-### Any Other Sections
-### That You Think
-### Might be Useful
 
 ## License
 
