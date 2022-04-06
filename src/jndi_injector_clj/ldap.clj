@@ -1,4 +1,4 @@
-(ns jndi-clj.ldap
+(ns jndi-injector-clj.ldap
   (:import [com.unboundid.ldap.listener
             InMemoryDirectoryServer
             InMemoryDirectoryServerConfig

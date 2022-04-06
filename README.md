@@ -1,10 +1,17 @@
-# jndi-clj
+# jndi-injector-clj
 
-FIXME: description
+jndi injection written in clojure, inspired by [welk1n's work](https://github.com/welk1n/JNDI-Injection-Exploit/tree/master)
+Work in progress.
 
-## Installation
+## Build
 
-Download from http://example.com/FIXME.
+[leiningen](https://leiningen.org/) is required
+
+```
+$ git clone https://github.com/0xw1nt3rmute/jndi-injector-clj
+$ cd jndi-injector-clj
+$ lein uberjar
+```
 
 ## Usage
 

