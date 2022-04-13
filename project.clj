@@ -6,6 +6,7 @@
   :dependencies [[org.clojure/clojure "1.10.3"]
                  [ring/ring-core "1.7.1"]
                  [ring/ring-jetty-adapter "1.7.1"]
+                 [org.clojure/tools.cli "1.0.206"]
                  [org.javassist/javassist "3.27.0-GA"]
                  [com.unboundid/unboundid-ldapsdk "3.1.1"]]
   :java-source-paths ["java_src"]
