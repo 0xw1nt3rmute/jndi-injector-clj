@@ -3,7 +3,8 @@
             Payload]
            [javassist.bytecode
             ClassFile])
-  (:require [clojure.string :as str]))
+  (:require [clojure.string :as str]
+            [ring.adapter.jetty :as jetty]))
 
 (defn gen-handler [app-conf]
   (let [command (:command app-conf)
@@ -17,3 +18,8 @@
       (str/includes? (:uri request) class-name8) {:status 200 :body payload-8}
       (str/includes? (:uri request) class-name7) {:status 200 :body payload-7}
       :else {:status 200 :body "not implemented!"}))))
+
+(defn start [app-conf]
+  (let [port (:port app-conf)
+        handler (gen-handler app-conf)]
+    (jetty/run-jetty handler {:port port})))

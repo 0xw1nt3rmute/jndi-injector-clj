@@ -33,11 +33,10 @@
             _ (println "[+] LDAP request detected " base)
             entry (get-entry app-conf base)
             ldap-result (new LDAPResult 0 ResultCode/SUCCESS)]
-        (if (some? entry)
-          (do (doto result
-               (.sendSearchEntry entry)
-               (.setResult ldap-result))
-              nil)
+        (when (some? entry)
+          (doto result
+            (.sendSearchEntry entry)
+            (.setResult ldap-result))
           nil)))))
 
 (defn start [app-conf]

